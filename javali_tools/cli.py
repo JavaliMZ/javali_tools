@@ -54,23 +54,14 @@ def main():
     ip_parser.set_defaults(func=get_ips_from_domains.run)
 
 
-    # Parse the arguments
+
+
+    # Parse arguments
     args = parser.parse_args()
 
     if not hasattr(args, "func"):
         parser.print_help()
         return
 
-    # Inject the arguments into sys.argv for the tool
-    new_argv = [sys.argv[0]]
-    for key, value in vars(args).items():
-        if key in ("func", "command"):
-            continue
-        if isinstance(value, bool) and value:
-            new_argv.append(f"--{key}")
-        elif not isinstance(value, bool):
-            new_argv.append(str(value))
-    sys.argv = new_argv
-
-    # Call the tool
-    args.func()
+    # Call the selected tool with the parsed arguments
+    args.func(args)
