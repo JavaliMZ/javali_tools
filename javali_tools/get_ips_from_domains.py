@@ -73,7 +73,7 @@ def get_domains_from_file(file_path: str) -> List[str]:
         sys.exit(1)
 
 
-def run() -> None:
+def run(args) -> None:
     domains = get_domains_from_file(args.file)
     resolved_ips = resolve_domains(domains, max_workers=args.threads)
     pretty_print(resolved_ips)
