@@ -1,9 +1,15 @@
 [project]
 name = "javali-tools"
-version = "1.0.3"
+version = "1.0.4"
 description = "Javali Red Team Toolkit"
 authors = [{name="Sylvain Julio"}]
-dependencies = []
+dependencies = [
+    "tabulate",
+    "termcolor",
+    "tqdm",
+    "cryptography",
+    "pwn"
+]
 
 [project.scripts]
 javali_tools = "javali_tools.cli:main"
