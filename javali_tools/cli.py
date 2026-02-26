@@ -3,7 +3,7 @@ import sys
 from . import ssl_cert_inspector
 from . import tls_table
 from . import ntlm_info
-from . import nmap_censys
+from . import getNmapAndCensysToTable
 from . import get_ips_from_domains
 
 
@@ -38,12 +38,11 @@ def main():
     ntlm_parser.set_defaults(func=ntlm_info.run)
 
     # Nmap/Censys Parser
-    NC_COMMAND = "nmap-censys"
-    NC_HELP = "Parse Nmap (.gnmap) or Censys (.json) output"
+    NC_COMMAND = "getNmapAndCensysToTable"
+    NC_HELP = "Parse all Nmap (.gnmap) or Censys (.json) files recursively from the actual path to get a table for copy-past to excel"
     nc_parser = subparsers.add_parser(NC_COMMAND, help=NC_HELP)
-    nc_parser.add_argument("file", help="Input file (.gnmap or .json)")
     nc_parser.add_argument("--zip", action="store_true", help="Shortened output format")
-    nc_parser.set_defaults(func=nmap_censys.run)
+    nc_parser.set_defaults(func=getNmapAndCensysToTable.run)
 
     # Get IPs from Domains
     IP_COMMAND = "get_ips_from_domains"
