@@ -5,6 +5,12 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 
 
+
+class Certificate:
+    pass
+
+
+
 def get_certificate(hostname, port=443):
     try:
         context = ssl.create_default_context()
@@ -22,7 +28,6 @@ def get_certificate(hostname, port=443):
             with context.wrap_socket(sock, server_hostname=hostname) as ssock:
                 return ssock.getpeercert(binary_form=True)
 
-
 def format_name(name):
     return ", ".join(f"{attr.oid._name}={attr.value}" for attr in name)
 
@@ -36,8 +41,15 @@ def print_certificate_info(cert):
     print(f"🏢 Issuer       : {format_name(cert.issuer)}")
 
     print("\n⏳ Validity")
-    not_before = cert.not_valid_before_utc
-    not_after = cert.not_valid_after_utc
+    # newer versions of cryptography use `not_valid_before`/`not_valid_after`
+    not_before = cert.not_valid_before
+    not_after = cert.not_valid_after
+
+    # the returned datetimes may be naive; normalize to UTC for display
+    if not_before.tzinfo is None:
+        not_before = not_before.replace(tzinfo=timezone.utc)
+    if not_after.tzinfo is None:
+        not_after = not_after.replace(tzinfo=timezone.utc)
 
     print(f"   Not Before   : {not_before.strftime('%Y-%m-%d %H:%M:%S %Z')}")
     print(f"   Not After    : {not_after.strftime('%Y-%m-%d %H:%M:%S %Z')}")
@@ -91,3 +103,12 @@ def run(args):
     der_cert = get_certificate(hostname, port)
     cert = x509.load_der_x509_certificate(der_cert)
     print_certificate_info(cert)
+
+
+
+
+if __name__ == "__main__":
+    class test_args:
+        target = "google.pt"
+        port = 443
+    run(test_args())
